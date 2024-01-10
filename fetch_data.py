@@ -46,20 +46,19 @@ timeZone	STRING	NO	Default: 0 (UTC)
 limit	INT	NO
 '''
 
-symbol = 'BTCUSDT'
+symbols = ['BTCUSDT', 'ETHUSDT', 'DAIUSDT']
 interval = '1h'
+limit = 24
 
-
-req_params = {    
-    'symbol': symbol,
-    'interval': interval,
-    'limit': 24
-
-}
 
 
 # Make the request
-def fetch_klines(params):
+def fetch_klines(symbol, interval, limit):
+    params = {
+        'symbol': symbol,
+        'interval': interval,
+        'limit': limit,
+    }
     klines_url = f'{base_url}/klines'
     headers = {
         'X-MBX-APIKEY': api_key
@@ -72,7 +71,7 @@ def fetch_klines(params):
     return data
 
 
-data = fetch_klines(params=req_params)
+data = {s: fetch_klines(symbol=s, interval=interval, limit=limit) for s in symbols}
 
-dict_data = {index: asdict(Kline(*kline[:-3]).format_data()) for index, kline in enumerate(data) }
+dict_data = {s: {index: asdict(Kline(*kline[:-3]).format_data()) for index, kline in enumerate(d) } for s, d in data.items()}
 print(json.dumps(dict_data, indent=2))
