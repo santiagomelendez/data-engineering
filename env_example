@@ -5,3 +5,4 @@ DB_DATABASE=example
 DB_USERNAME=example
 DB_PWD=example
 DB_PORT=6666
+AIRFLOW_UID=0 #echo -e "AIRFLOW_UID=$(id -u)" 
