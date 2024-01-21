@@ -1,6 +1,8 @@
 -- Create the table
 CREATE TABLE IF NOT EXISTS klines (
     id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW(),
     ticker VARCHAR(10),
     open_time TIMESTAMP,
     open_price FLOAT,
@@ -10,8 +12,7 @@ CREATE TABLE IF NOT EXISTS klines (
     volume FLOAT,
     close_time TIMESTAMP,
     quote_asset_volume FLOAT,
-    number_of_trades INT,
-    symbol VARCHAR(10),
+    number_of_trades INT
 );
 
 -- Insert the JSON data
