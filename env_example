@@ -1,2 +1,7 @@
 BINANCE_API_KEY=secret
 BINANCE_URL=https://binance.com
+DB_HOSTNAME=example.org
+DB_DATABASE=example
+DB_USERNAME=example
+DB_PWD=example
+DB_PORT=6666
