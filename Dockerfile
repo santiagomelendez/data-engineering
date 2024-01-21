@@ -1,13 +1,5 @@
-FROM python:3.9-slim
+FROM apache/airflow:2.8.1
 
-WORKDIR /app
+ADD requirements.txt .
 
-COPY requirements.txt /app/
-
-
-RUN pip install --no-cache-dir -r requirements.txt
-
-COPY . /app/
-
-# Run the Python script
-CMD ["python", "fetch_data.py"]
+RUN pip install apache-airflow==${AIRFLOW_VERSION} -r requirements.txt
