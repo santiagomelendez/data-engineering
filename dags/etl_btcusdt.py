@@ -3,7 +3,8 @@ import pandas as pd
 from airflow import DAG, Dataset
 from airflow.operators.python import PythonOperator
 from datetime import datetime, timedelta
-from etl.extraction import extract_data, fetch_klines
+from etl.extraction import extract_data
+from etl.transformation import transform_data
 
 dags_args = {
     'owner': 'Santiago Melendez',
@@ -24,11 +25,15 @@ def extract():
 
 def transform(ti):
     input_file = ti.xcom_pull(task_ids='extraction')
-    print('INPUT_FILE: ', {input_file})
-    df = pd.read_csv(input_file)
-    print("DATAFRAME_SIZE: ", df.size)
+    outut_file = f'{ticker}_transformed.csv'
+    print('TRANSFORM TASK: Processing raw data')
+    transform_data(input_file=input_file, symbol=ticker, outut_file=outut_file)
+    print('TRANSFORM TASK: Transformation was successful')
+    return outut_file
 
-def load():
+def load(ti):
+    input_file = ti.xcom_pull(task_ids='transformation')
+    df = pd.read_csv(input_file)
     print('Load data to database')
 
 with DAG(dag_id='etl_btc',
@@ -38,7 +43,7 @@ with DAG(dag_id='etl_btc',
         default_args=dags_args,
         tags=['data']) as dag:
     extract = PythonOperator(task_id='extraction', python_callable=extract, dag=dag, provide_context=True)
-    transform = PythonOperator(task_id='transform_data', python_callable=transform, dag=dag, provide_context=True)
+    transform = PythonOperator(task_id='transformation', python_callable=transform, dag=dag, provide_context=True)
     load = PythonOperator(task_id='load_data', python_callable=load, dag=dag, provide_context=True)
 
     extract >> transform >> load
