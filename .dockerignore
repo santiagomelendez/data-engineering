@@ -1,0 +1,11 @@
+logs
+dags
+notebooks
+output_example
+output
+plugins
+.gitignore
+airflow.sh
+docker-compose.yaml
+Dockerfile
+env_example
