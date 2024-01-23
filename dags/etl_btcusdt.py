@@ -6,6 +6,7 @@ from datetime import datetime, timedelta
 from etl.extraction import extract_data
 from etl.transformation import transform_data
 from etl.validations import validate_duplicates
+from etl.upload import upload_data
 
 dags_args = {
     'owner': 'Santiago Melendez',
@@ -41,8 +42,9 @@ def validate(ti):
 
 def load(ti):
     input_file = ti.xcom_pull(task_ids='validations')
-    df = pd.read_csv(input_file)
-    print('Load data to database')
+    upload_data(input_file=input_file)
+    print('LOAD TASK: Loading was successful successful')
+
 
 with DAG(dag_id='etl_btc',
         description='Dag for btcusdt etl from binance',
