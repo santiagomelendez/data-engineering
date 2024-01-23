@@ -17,7 +17,7 @@ def upload_new_data(dataframe):
     new_data_df = new_data_df[new_data_df.columns[:-2]]
     print(f'UPLOAD: Will be upload {len(new_data_df)} new registers')
     new_data_df.to_sql(name='klines', con=engine, if_exists='append', index=False, method='multi')
-    print(f'UPLOAD: Upload successful: {(new_data_df)} new registers')
+    print(f'UPLOAD: Upload successful: {len(new_data_df)} new registers')
 
 
 def update_existing_data(dataframe):

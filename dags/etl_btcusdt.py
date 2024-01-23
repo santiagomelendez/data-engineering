@@ -43,7 +43,7 @@ def validate(ti):
 def load(ti):
     input_file = ti.xcom_pull(task_ids='validations')
     upload_data(input_file=input_file)
-    print('LOAD TASK: Loading was successful successful')
+    print('LOAD TASK: Loading was successful')
 
 
 with DAG(dag_id='etl_btc',
@@ -55,6 +55,6 @@ with DAG(dag_id='etl_btc',
     extract = PythonOperator(task_id='extraction', python_callable=extract, dag=dag, provide_context=True)
     transform = PythonOperator(task_id='transformation', python_callable=transform, dag=dag, provide_context=True)
     validate = PythonOperator(task_id='validations', python_callable=validate, dag=dag, provide_context=True)
-    load = PythonOperator(task_id='load_data', python_callable=load, dag=dag, provide_context=True)
+    load = PythonOperator(task_id='load', python_callable=load, dag=dag, provide_context=True)
 
     extract >> transform >> validate >> load
