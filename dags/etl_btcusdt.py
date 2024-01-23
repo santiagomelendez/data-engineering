@@ -48,7 +48,7 @@ def load(ti):
 
 with DAG(dag_id='etl_btc',
         description='Dag for btcusdt etl from binance',
-        schedule_interval='*/10 * * * *',
+        schedule_interval='@daily',
         catchup=False,
         default_args=dags_args,
         tags=['data']) as dag:
