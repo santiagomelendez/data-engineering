@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS klines (
     id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     created_at TIMESTAMP DEFAULT NOW(),
     updated_at TIMESTAMP DEFAULT NOW(),
-    ticker VARCHAR(10),
+    symbol VARCHAR(10),
     open_time TIMESTAMP,
     open_price FLOAT,
     high_price FLOAT,
@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS klines (
 
 -- Insert the JSON data
 INSERT INTO klines (
-    ticker, open_time, open_price, high_price, low_price, close_price,
+    symbol, open_time, open_price, high_price, low_price, close_price,
     volume, close_time, quote_asset_volume, number_of_trades) VALUES 
 ('btcusdt' , '2024-01-17 04:00:00',  42849.0,  42921.1,42781.49, 42854.01, 791.4, '2024-01-17 04:59:59.999', 33911017.91, 32838),
 ('btcusdt', '2024-01-17 05:00:00', 42854.01, 42925.49,42765.41, 42783.39, 661.25, '2024-01-17 05:59:59.999', 28333635.53, 30696),

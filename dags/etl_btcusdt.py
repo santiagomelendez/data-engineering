@@ -5,6 +5,7 @@ from airflow.operators.python import PythonOperator
 from datetime import datetime, timedelta
 from etl.extraction import extract_data
 from etl.transformation import transform_data
+from etl.validations import validate_duplicates
 
 dags_args = {
     'owner': 'Santiago Melendez',
@@ -31,8 +32,15 @@ def transform(ti):
     print('TRANSFORM TASK: Transformation was successful')
     return outut_file
 
-def load(ti):
+def validate(ti):
     input_file = ti.xcom_pull(task_ids='transformation')
+    output_file = f'{ticker}_upload.csv'
+    validate_duplicates(input_file=input_file, output_file=output_file)
+    return output_file
+    
+
+def load(ti):
+    input_file = ti.xcom_pull(task_ids='validations')
     df = pd.read_csv(input_file)
     print('Load data to database')
 
@@ -44,6 +52,7 @@ with DAG(dag_id='etl_btc',
         tags=['data']) as dag:
     extract = PythonOperator(task_id='extraction', python_callable=extract, dag=dag, provide_context=True)
     transform = PythonOperator(task_id='transformation', python_callable=transform, dag=dag, provide_context=True)
+    validate = PythonOperator(task_id='validations', python_callable=validate, dag=dag, provide_context=True)
     load = PythonOperator(task_id='load_data', python_callable=load, dag=dag, provide_context=True)
 
-    extract >> transform >> load
+    extract >> transform >> validate >> load
