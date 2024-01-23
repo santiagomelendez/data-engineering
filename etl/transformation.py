@@ -15,4 +15,4 @@ def transform_data(input_file, symbol, outut_file):
     n_df = add_relevant_columns(df, symbol=symbol)
     transformed_df = format_dataframe(dataframe=n_df, time_unit='ms')
     check_for_null_values(transformed_df)
-    transformed_df.to_csv(outut_file)
+    transformed_df.to_csv(outut_file, index=False)
