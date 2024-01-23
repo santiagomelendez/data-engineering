@@ -5,7 +5,7 @@ hostname = os.environ.get('DB_HOSTNAME')
 database = os.environ.get('DB_DATABASE')
 username = os.environ.get('DB_USERNAME')
 pwd = os.environ.get('DB_PWD')
-port = int(os.environ.get('DB_PORT'))
+port = int(os.environ.get('DATABASE_PORT'))
 
 
 db_params = {
