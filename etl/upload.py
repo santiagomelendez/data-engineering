@@ -8,7 +8,8 @@ def upload_data(input_file):
     new_data_df = df[df['should_be_updated'] == False]
     updated_df = df[df['should_be_updated'] == True]
     upload_new_data(dataframe=new_data_df)
-    update_existing_data(dataframe=updated_df)
+    if len(updated_df) > 0:
+        update_existing_data(dataframe=updated_df)
 
 
 def upload_new_data(dataframe):
