@@ -18,3 +18,18 @@ def validate_duplicates(input_file, output_file):
     print(f'VALIDATIONS: There are {(input_df["should_be_updated"] == True).count()} duplicated registers')
     input_df.to_csv(output_file, index=False)
 
+
+def filter_by_threshold(input_file, threshold):
+    '''
+    This function receive a file with tickers and check if threshold is between high price and low price
+    per each time.
+    It returns a list of times where the condition is matched
+    '''
+    input_df = pd.read_csv(input_file)
+    output = input_df.loc[(input_df['low_price'].astype(float) <= threshold) & 
+                     (threshold <= input_df['high_price'].astype(float))]
+    if not output.empty:
+        verb = 'is' if len(output) == 1 else 'are'
+        print(f'VALIDATIONS_THRESHOLD: There {verb} {len(output)} candlestick whose price reached {threshold} ')
+    return output
+

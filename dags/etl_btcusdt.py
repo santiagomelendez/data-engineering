@@ -5,7 +5,7 @@ from airflow.operators.python import PythonOperator
 from datetime import datetime, timedelta
 from etl.extraction import extract_data
 from etl.transformation import transform_data
-from etl.validations import validate_duplicates
+from etl.validations import validate_duplicates, filter_by_threshold
 from etl.upload import upload_data
 
 dags_args = {
@@ -46,6 +46,11 @@ def load(ti):
     print('LOAD TASK: Loading was successful')
 
 
+def send_email(ti):
+    input_file = ti.xcom_pull(task_ids='extraction')
+    output = filter_by_threshold(input_file=input_file, threshold=45000)
+
+
 with DAG(dag_id='etl_btc',
         description='Dag for btcusdt etl from binance',
         schedule_interval='@daily',
@@ -56,5 +61,8 @@ with DAG(dag_id='etl_btc',
     transform = PythonOperator(task_id='transformation', python_callable=transform, dag=dag, provide_context=True)
     validate = PythonOperator(task_id='validations', python_callable=validate, dag=dag, provide_context=True)
     load = PythonOperator(task_id='load', python_callable=load, dag=dag, provide_context=True)
+    send_email = PythonOperator(task_id='send_email', python_callable=send_email, dag=dag, provide_context=True)
+
 
     extract >> transform >> validate >> load
+    extract >> send_email
