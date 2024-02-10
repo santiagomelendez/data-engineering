@@ -53,10 +53,9 @@ def send_email(ti):
     output = filter_by_threshold(input_file=input_file, threshold=price_threshold)
     print(f"NOTIFICATIONS: FOUND {len(output)} WHERE PRICE THRESHOLD HAS BEEN REACHED")
     if not output.empty:
-        send_email_from_gmail(body=f'The ticker {ticker} reached the price {price_threshold} in the times: \n {pd.to_datetime(output["open_time"], unit="ms")}', 
+        send_email_from_gmail(body=f'The {ticker} ticker reached a price of $ {price_threshold} at the following times: \n {pd.to_datetime(output["open_time"], unit="ms")}', 
                               subject=f'PRICE THRESHOLD REACHED!!')
         
-
 
 with DAG(dag_id='etl_btc',
         description='Dag for btcusdt etl from binance',
