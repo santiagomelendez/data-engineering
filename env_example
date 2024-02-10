@@ -7,7 +7,7 @@ DB_PWD=example
 DATABASE_PORT=6666
 AIRFLOW_UID=0 #echo -e "AIRFLOW_UID=$(id -u)" 
 
-CREDENTIALS_PATH="google credentials folder"
+CREDENTIALS_PATH="/opt/airflow/credentials"
 RECEIVER_EMAIL=receiver@gmail.com
 SENDER_EMAIL=sender@gmail.com
 SMTP_PORT=587
