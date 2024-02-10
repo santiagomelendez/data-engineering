@@ -1,6 +1,6 @@
 import os
 import pandas as pd
-from airflow import DAG, Dataset
+from airflow import DAG
 from airflow.operators.python import PythonOperator
 from datetime import datetime, timedelta
 from utils.notifications import send_email_from_gmail
