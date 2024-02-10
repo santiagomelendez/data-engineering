@@ -1,6 +1,7 @@
 import os
 import pandas as pd
-from airflow import DAG, Dataset
+from config.config import get_config
+from airflow import DAG
 from airflow.operators.python import PythonOperator
 from datetime import datetime, timedelta
 from utils.notifications import send_email_from_gmail
@@ -17,7 +18,11 @@ dags_args = {
     'retry_delay': timedelta(minutes=5),
 }
 
-ticker = 'btcusdt'
+config = get_config()
+btc_conf = config['BTC']
+ticker = btc_conf['ticker']
+threshold = btc_conf['price_threshold']
+
 
 def extract():
     output_path = f'{ticker}_raw.csv'
@@ -49,7 +54,7 @@ def load(ti):
 
 def send_email(ti):
     input_file = ti.xcom_pull(task_ids='extraction')
-    price_threshold = 47000
+    price_threshold = float(threshold)
     output = filter_by_threshold(input_file=input_file, threshold=price_threshold)
     print(f"NOTIFICATIONS: FOUND {len(output)} WHERE PRICE THRESHOLD HAS BEEN REACHED")
     if not output.empty:
