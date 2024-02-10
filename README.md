@@ -11,6 +11,7 @@ Automated Extraction and Storage for Crypto Market Analysis with Airflow
 6. [Usage](#usage)
 7. [Project Structure](#project-structure)
 8. [Airflow DAGs](#airflow-dags)
+9. [Email Alerts](#email-alerts)
 
 
 ## Introduction
@@ -106,4 +107,15 @@ The Airflow Directed Acyclic Graphs (DAGs) included in the project:
 
 * etl_btc:
     * Propose: Goal: Get the ```BTCUSDT``` candlesticks hourly for the before daybefore today 
-    * schedule: @daily  
+    * schedule: @daily
+
+   
+
+## Email Alerts
+One of the task of the flow contains the email sent in case the price reached a specific value.
+To configure this task, it's only have to create the folder ```credentials``` and add the file ```google_credentials.json``` with your google oauth2 credentials.
+
+![Alt text](airflow/screenshots/dag_graph.png)
+
+The emails sent looks like:
+![Alt text](airflow/screenshots/email_alert.png)

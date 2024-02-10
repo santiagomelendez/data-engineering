@@ -3,9 +3,10 @@ import pandas as pd
 from airflow import DAG, Dataset
 from airflow.operators.python import PythonOperator
 from datetime import datetime, timedelta
+from utils.notifications import send_email_from_gmail
 from etl.extraction import extract_data
 from etl.transformation import transform_data
-from etl.validations import validate_duplicates
+from etl.validations import validate_duplicates, filter_by_threshold
 from etl.upload import upload_data
 
 dags_args = {
@@ -46,6 +47,17 @@ def load(ti):
     print('LOAD TASK: Loading was successful')
 
 
+def send_email(ti):
+    input_file = ti.xcom_pull(task_ids='extraction')
+    price_threshold = 47000
+    output = filter_by_threshold(input_file=input_file, threshold=price_threshold)
+    print(f"NOTIFICATIONS: FOUND {len(output)} WHERE PRICE THRESHOLD HAS BEEN REACHED")
+    if not output.empty:
+        send_email_from_gmail(body=f'The ticker {ticker} reached the price {price_threshold} in the times: \n {pd.to_datetime(output["open_time"], unit="ms")}', 
+                              subject=f'PRICE THRESHOLD REACHED!!')
+        
+
+
 with DAG(dag_id='etl_btc',
         description='Dag for btcusdt etl from binance',
         schedule_interval='@daily',
@@ -56,5 +68,8 @@ with DAG(dag_id='etl_btc',
     transform = PythonOperator(task_id='transformation', python_callable=transform, dag=dag, provide_context=True)
     validate = PythonOperator(task_id='validations', python_callable=validate, dag=dag, provide_context=True)
     load = PythonOperator(task_id='load', python_callable=load, dag=dag, provide_context=True)
+    send_email = PythonOperator(task_id='send_email', python_callable=send_email, dag=dag, provide_context=True)
+
 
     extract >> transform >> validate >> load
+    extract >> send_email
