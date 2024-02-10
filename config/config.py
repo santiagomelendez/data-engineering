@@ -1,7 +1,10 @@
+import os
 from configparser import ConfigParser
 
+CONFIG_FILENAME = 'config.ini'
 
-def get_config(config_file='config.ini'):
+
+def get_config():
     """
     Retrieve configurations from the specified config file.
 
@@ -11,6 +14,8 @@ def get_config(config_file='config.ini'):
     Returns:
     - dict: A dictionary containing the configurations.
     """
+    project_root = os.path.dirname(os.path.abspath(__file__))
+    config_file = os.path.join(project_root, CONFIG_FILENAME)
     # Create a ConfigParser object
     config_parser = ConfigParser()
 
