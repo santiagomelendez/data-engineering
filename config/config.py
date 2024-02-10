@@ -16,10 +16,7 @@ def get_config():
     """
     project_root = os.path.dirname(os.path.abspath(__file__))
     config_file = os.path.join(project_root, CONFIG_FILENAME)
-    # Create a ConfigParser object
     config_parser = ConfigParser()
-
-    # Read the configuration file
     config_parser.read(config_file)
     sections = config_parser.sections()
     configs = configs = {s: {o: config_parser.get(s, o) for o in config_parser.options(s)} for s in sections}
