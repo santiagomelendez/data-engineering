@@ -2,7 +2,7 @@ import requests
 import json
 import os
 import pandas as pd
-from datetime import datetime
+import pendulum
 from json import JSONDecodeError
 from utils.pandas_helpers import save_data
 
@@ -16,10 +16,10 @@ fields = ['open_time', 'open_price', 'high_price',
 interval = '1h'
 limit = 24
 
-def get_ms_timestamp(dt: datetime):
+def get_ms_timestamp(dt: pendulum):
     if not dt:
         return None
-    epoch = datetime(1970, 1, 1)
+    epoch = pendulum.datetime(1970, 1, 1)
     timestamp = int((dt - epoch).total_seconds() * 1000)
     return timestamp
 
@@ -61,7 +61,7 @@ def fetch_klines(symbol, interval, limit=None, from_date=None, to_date=None):
     return data
 
 
-def extract_data(ticker, filepath):
-    raw_data = fetch_klines(symbol=ticker, interval=interval, limit=limit)
+def extract_data(ticker, filepath, from_date, to_date):
+    raw_data = fetch_klines(symbol=ticker, interval=interval, limit=limit, from_date=from_date, to_date=to_date)
     df = save_data(data=raw_data, columns=fields, filepath=filepath)
     print(f'<<<<< Extraction successful for {ticker}. Data was saved in {filepath} >>>>>>>')
