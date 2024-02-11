@@ -11,6 +11,7 @@ Automated Extraction and Storage for Crypto Market Analysis with Airflow
 6. [Usage](#usage)
 7. [Project Structure](#project-structure)
 8. [Airflow DAGs](#airflow-dags)
+9. [Airflow Backfill](#airflow-backfill)
 9. [Email Alerts](#email-alerts)
 
 
@@ -109,7 +110,21 @@ The Airflow Directed Acyclic Graphs (DAGs) included in the project:
     * Propose: Goal: Get the ```BTCUSDT``` candlesticks hourly for the before daybefore today 
     * schedule: @daily
 
-   
+
+## Airflow Backfill
+Utilize the airflow-cli to patch execution gaps by running specific subsections of a Directed Acyclic Graph (DAG) within a defined date range, effectively addressing backfill requirements.
+To doing this, on the root of the project run the following command, specifying the start date and end date also the dag id.
+
+```
+./airflow.sh dags backfill -s 2023-12-01 -e 2024-01-01 etl_btc
+```
+
+Airflow will execute all of the executions according to the schedule of the DAG
+
+The example below generate this result
+![Alt text](airflow/screenshots/backfill.png)
+
+
 
 ## Email Alerts
 One of the task of the flow contains the email sent in case the price reached a specific value.
