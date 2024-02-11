@@ -24,10 +24,12 @@ ticker = btc_conf['ticker']
 threshold = btc_conf['price_threshold']
 
 
-def extract():
+def extract(**kwargs):
     output_path = f'{ticker}_raw.csv'
     print(f'Extracting data from Binance for ticker {ticker}')
-    extract_data(ticker=ticker.upper(), filepath=output_path)
+    extract_data(ticker=ticker.upper(), filepath=output_path, 
+                 from_date=kwargs['data_interval_start'], 
+                 to_date=kwargs['data_interval_end'])
     return output_path
 
 
