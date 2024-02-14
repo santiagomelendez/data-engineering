@@ -4,7 +4,8 @@ from utils.pandas_helpers import format_dataframe, check_for_null_values
 
 
 def add_relevant_columns(dataframe, symbol):
-    relevant_columns = ['symbol', 'open_time', 'open_price', 'high_price', 'low_price', 'close_price', 'volume', 'close_time', 'quote_asset_volume', 'number_of_trades']  
+    relevant_columns = ['symbol', 'open_time', 'open_price', 'high_price', 'low_price', 'close_price', 'volume', 
+                        'close_time', 'quote_asset_volume', 'number_of_trades', 'extraction_date', 'extraction_params']  
     dataframe['symbol'] = symbol
     df = dataframe[relevant_columns]
     return df
