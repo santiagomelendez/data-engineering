@@ -15,7 +15,7 @@ def validate_duplicates(input_file, output_file):
                                     from klines
                                     """, conn)
     input_df['should_be_updated'] = input_df['pk'].isin(db_pks_df['pk'])
-    print(f'VALIDATIONS: There are {(input_df["should_be_updated"] == True).count()} duplicated registers')
+    print(f'VALIDATIONS: There are {(input_df["should_be_updated"] == True).sum()} duplicated registers')
     input_df.to_csv(output_file, index=False)
 
 
