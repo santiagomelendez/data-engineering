@@ -1,6 +1,7 @@
 import pandas as pd
 from utils.pandas_helpers import format_dataframe
 from utils.persistence import engine, execute_query
+from sqlalchemy import dialects
 
 
 def upload_data(input_file):
@@ -17,7 +18,8 @@ def upload_new_data(dataframe):
     new_data_df = format_dataframe(dataframe=dataframe)
     new_data_df = new_data_df[new_data_df.columns[:-2]]
     print(f'UPLOAD: Will be upload {len(new_data_df)} new registers')
-    new_data_df.to_sql(name='klines', con=engine, if_exists='append', index=False, method='multi')
+    new_data_df.to_sql(name='klines', con=engine, if_exists='append', 
+                       index=False, method='multi', dtype={'extraction_params': dialects.postgresql.JSON})
     print(f'UPLOAD: Upload successful: {len(new_data_df)} new registers')
 
 
@@ -25,7 +27,7 @@ def update_existing_data(dataframe):
     print('UPLOAD: Formatting existing data before upload')
     update_data_df = format_dataframe(dataframe=dataframe)
     print(f'UPLOAD: Will be updated {len(update_data_df)} registers')
-    update_data_df.to_sql(name='klines_tmp', con=engine, if_exists='replace')
+    update_data_df.to_sql(name='klines_tmp', con=engine, if_exists='replace', dtype={'extraction_params': dialects.postgresql.JSON})
     update_klines()
     print(f'UPLOAD: Update successful: {len(update_data_df)} existing registers')
 
@@ -41,7 +43,9 @@ def update_klines():
                     volume = temp.volume,
                     close_time = temp.close_time,
                     quote_asset_volume = temp.quote_asset_volume,
-                    symbol = temp.symbol
+                    symbol = temp.symbol,
+                    extraction_date = temp.extraction_date,
+                    extraction_params = temp.extraction_params
                 FROM klines_tmp as temp
                 WHERE concat(k.open_time, '_', lower(k.symbol), '_', k.close_time) = temp.pk;
             """

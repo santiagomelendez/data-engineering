@@ -10,7 +10,7 @@ api_key = os.environ.get('BINANCE_API_KEY', '')
 base_url = os.environ.get('BINANCE_URL', '')
 fields = ['open_time', 'open_price', 'high_price', 
                     'low_price', 'close_price', 'volume', 'close_time', 'quote_asset_volume', 
-                    'number_of_trades', 'taker_buy_base_asset_volume', 'taker_buy_quote_asset_volume', 'unused_field']
+                    'number_of_trades', 'taker_buy_base_asset_volume', 'taker_buy_quote_asset_volume', 'unused_field', 'extraction_date', 'extraction_params']
     
 
 interval = '1h'
@@ -58,10 +58,11 @@ def fetch_klines(symbol, interval, limit=None, from_date=None, to_date=None):
         data = response.json()
     except JSONDecodeError:
         print("Response is different as expected: ", response.text)
-    return data
+    return data, params
 
 
-def extract_data(ticker, filepath, from_date, to_date):
-    raw_data = fetch_klines(symbol=ticker, interval=interval, limit=limit, from_date=from_date, to_date=to_date)
-    df = save_data(data=raw_data, columns=fields, filepath=filepath)
+def extract_data(ticker, filepath, from_date, to_date, extraction_date):
+    raw_data, params = fetch_klines(symbol=ticker, interval=interval, limit=limit, from_date=from_date, to_date=to_date)
+    data = [d + [extraction_date] + [params] for d in raw_data]
+    df = save_data(data=data, columns=fields, filepath=filepath)
     print(f'<<<<< Extraction successful for {ticker}. Data was saved in {filepath} >>>>>>>')

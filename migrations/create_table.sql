@@ -16,6 +16,9 @@ CREATE TABLE IF NOT EXISTS klines (
     PRIMARY KEY (open_time, symbol, close_time)
 );
 
+alter table klines add column extraction_date TIMESTAMP;
+alter table klines add column extraction_params JSON;
+
 -- Insert the JSON data
 INSERT INTO klines (
     symbol, open_time, open_price, high_price, low_price, close_price,
