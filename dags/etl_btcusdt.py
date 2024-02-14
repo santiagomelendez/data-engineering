@@ -29,7 +29,8 @@ def extract(**kwargs):
     print(f'Extracting data from Binance for ticker {ticker}')
     extract_data(ticker=ticker.upper(), filepath=output_path, 
                  from_date=kwargs['data_interval_start'], 
-                 to_date=kwargs['data_interval_end'])
+                 to_date=kwargs['data_interval_end'],
+                 extraction_date=kwargs['execution_date'])
     return output_path
 
 
